@@ -9,7 +9,7 @@ export const initialCanvasState: CanvasState = {
   selectedWireId: null,
   wireDraft: null,
   rewireDraft: null,
-  isRunning: false,
+  isRunning: true,
 }
 
 export function simulatorReducer(state: CanvasState, action: SimulatorAction): CanvasState {

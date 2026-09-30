@@ -333,10 +333,8 @@ export function canConnectPins(
   fromComponentId: string,
   toComponentId: string
 ): boolean {
+  // Disallow connecting a pin to itself
   if (fromComponentId === toComponentId && fromPin.id === toPin.id) return false
-
-  if (!fromDef.canConnectPins(fromPin.type, toPin.type)) return false
-  if (!toDef.canConnectPins(toPin.type, fromPin.type)) return false
 
   // Prevent duplicate wire between same two pins
   const duplicate = existingWires.some(

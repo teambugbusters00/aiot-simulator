@@ -477,3 +477,137 @@ export function simulateLcd1602(
     flags: { powered, backlightOn },
   }
 }
+
+/** DC Motor — spins when voltage differential across terminals exceeds threshold */
+export function simulateDcMotor(
+  component: PlacedComponent,
+  pins: ComponentPin[],
+  pinVoltages: Record<string, PinVoltage>
+): ComponentSimulationResult {
+  const t1 = getPinVoltage(pinVoltages, pins, "+") ?? getPinVoltage(pinVoltages, pins, "pos") ?? getPinVoltage(pinVoltages, pins, "1")
+  const t2 = getPinVoltage(pinVoltages, pins, "-") ?? getPinVoltage(pinVoltages, pins, "neg") ?? getPinVoltage(pinVoltages, pins, "2")
+  const vDiff = t1 !== null && t2 !== null ? t1 - t2 : 0
+  const isSpinning = Math.abs(vDiff) >= ACTIVATION_THRESHOLD
+  const speed = isSpinning ? Math.min(1, Math.abs(vDiff) / 5) : 0
+  const direction = vDiff >= 0 ? 1 : -1
+
+  const pinStates: ComponentSimulationResult["pinStates"] = {}
+  for (const pin of pins) {
+    pinStates[pin.id] = makePinResult(pinVoltages[pin.id] ?? null)
+  }
+
+  return {
+    componentId: component.id,
+    pinStates,
+    flags: { isSpinning, speed, direction, vDiff },
+  }
+}
+
+/** Photoresistor / LDR Module */
+export function simulatePhotoresistor(
+  component: PlacedComponent,
+  pins: ComponentPin[],
+  pinVoltages: Record<string, PinVoltage>
+): ComponentSimulationResult {
+  const vcc = getPinVoltage(pinVoltages, pins, "VCC") ?? getPinVoltage(pinVoltages, pins, "vcc")
+  const gnd = getPinVoltage(pinVoltages, pins, "GND") ?? getPinVoltage(pinVoltages, pins, "gnd")
+  const powered = vcc !== null && gnd !== null && vcc - gnd >= ACTIVATION_THRESHOLD
+  const lightLevel = typeof component.metadata.lightLevel === "number" ? component.metadata.lightLevel : 0.5
+
+  const pinStates: ComponentSimulationResult["pinStates"] = {}
+  for (const pin of pins) {
+    if (pin.name === "AO" || pin.name === "analog") {
+      const aoVoltage = powered ? (vcc! - gnd!) * (1 - lightLevel) : null
+      pinStates[pin.id] = makePinResult(aoVoltage)
+    } else if (pin.name === "DO" || pin.name === "digital") {
+      const doVoltage = powered ? (lightLevel > 0.5 ? V_LOW : V_HIGH) : null
+      pinStates[pin.id] = makePinResult(doVoltage)
+    } else {
+      pinStates[pin.id] = makePinResult(pinVoltages[pin.id] ?? null)
+    }
+  }
+
+  return {
+    componentId: component.id,
+    pinStates,
+    flags: { powered, lightLevel },
+  }
+}
+
+/** PIR Motion Sensor */
+export function simulatePirMotionSensor(
+  component: PlacedComponent,
+  pins: ComponentPin[],
+  pinVoltages: Record<string, PinVoltage>
+): ComponentSimulationResult {
+  const vcc = getPinVoltage(pinVoltages, pins, "VCC") ?? getPinVoltage(pinVoltages, pins, "vcc")
+  const gnd = getPinVoltage(pinVoltages, pins, "GND") ?? getPinVoltage(pinVoltages, pins, "gnd")
+  const powered = vcc !== null && gnd !== null && vcc - gnd >= ACTIVATION_THRESHOLD
+  const motionDetected = powered && component.metadata.motionDetected === true
+
+  const pinStates: ComponentSimulationResult["pinStates"] = {}
+  for (const pin of pins) {
+    if (pin.name === "OUT" || pin.name === "out") {
+      pinStates[pin.id] = makePinResult(powered ? (motionDetected ? V_HIGH : V_LOW) : null)
+    } else {
+      pinStates[pin.id] = makePinResult(pinVoltages[pin.id] ?? null)
+    }
+  }
+
+  return {
+    componentId: component.id,
+    pinStates,
+    flags: { powered, motionDetected },
+  }
+}
+
+/** SSD1306 128x64 OLED Display (I2C) */
+export function simulateSsd1306(
+  component: PlacedComponent,
+  pins: ComponentPin[],
+  pinVoltages: Record<string, PinVoltage>
+): ComponentSimulationResult {
+  const vcc = getPinVoltage(pinVoltages, pins, "VCC") ?? getPinVoltage(pinVoltages, pins, "vcc")
+  const gnd = getPinVoltage(pinVoltages, pins, "GND") ?? getPinVoltage(pinVoltages, pins, "gnd")
+  const powered = vcc !== null && gnd !== null && vcc - gnd >= ACTIVATION_THRESHOLD
+  const text = typeof component.metadata.text === "string" ? component.metadata.text : "AIoT Astra 128x64\nSystem Ready"
+
+  const pinStates: ComponentSimulationResult["pinStates"] = {}
+  for (const pin of pins) {
+    pinStates[pin.id] = makePinResult(pinVoltages[pin.id] ?? null)
+  }
+
+  return {
+    componentId: component.id,
+    pinStates,
+    flags: { powered, text },
+  }
+}
+
+/** DHT22 High-Precision Temperature & Humidity Sensor */
+export function simulateDht22(
+  component: PlacedComponent,
+  pins: ComponentPin[],
+  pinVoltages: Record<string, PinVoltage>
+): ComponentSimulationResult {
+  const vcc = getPinVoltage(pinVoltages, pins, "VCC") ?? getPinVoltage(pinVoltages, pins, "vcc")
+  const gnd = getPinVoltage(pinVoltages, pins, "GND") ?? getPinVoltage(pinVoltages, pins, "gnd")
+  const powered = vcc !== null && gnd !== null && vcc - gnd >= ACTIVATION_THRESHOLD
+  const temperature = typeof component.metadata.temperature === "number" ? component.metadata.temperature : 25.4
+  const humidity = typeof component.metadata.humidity === "number" ? component.metadata.humidity : 42.0
+
+  const pinStates: ComponentSimulationResult["pinStates"] = {}
+  for (const pin of pins) {
+    if (pin.name === "SDA" || pin.name === "DATA") {
+      pinStates[pin.id] = makePinResult(powered ? V_HIGH : null)
+    } else {
+      pinStates[pin.id] = makePinResult(pinVoltages[pin.id] ?? null)
+    }
+  }
+
+  return {
+    componentId: component.id,
+    pinStates,
+    flags: { powered, temperature, humidity },
+  }
+}

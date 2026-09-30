@@ -1,8 +1,9 @@
 "use client"
 
-import { memo } from "react"
+import { memo, useEffect } from "react"
 import type { ComponentRendererProps } from "@/types/simulator"
 import { PinHitArea } from "@/components/simulator/components/base/pin-hit-area"
+import { setBuzzerSound } from "@/lib/simulator/engine/audio-engine"
 
 function SpeakerRendererInner({
   component,
@@ -14,6 +15,13 @@ function SpeakerRendererInner({
 }: ComponentRendererProps) {
   const isActive = simulation?.flags.isActive === true
   const glow = isActive ? "#57aaff" : "#b3b3b3"
+
+  useEffect(() => {
+    setBuzzerSound(component.id, isActive, 880)
+    return () => {
+      setBuzzerSound(component.id, false)
+    }
+  }, [component.id, isActive])
 
   return (
     <g data-component-id={component.id}>

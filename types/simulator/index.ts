@@ -85,8 +85,8 @@ export interface PinSimulationResult {
 export interface ComponentSimulationResult {
   componentId: string
   pinStates: Record<string, PinSimulationResult>
-  /** Visual/behavioral flags (e.g. led on, buzzer active) */
-  flags: Record<string, boolean | number>
+  /** Visual/behavioral flags (e.g. led on, buzzer active, text) */
+  flags: Record<string, boolean | number | string>
 }
 
 /** Full simulation snapshot */

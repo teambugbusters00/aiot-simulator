@@ -64,13 +64,13 @@ const TYPE_MAP: Record<string, string> = {
   "wokwi-hc-sr04": "hc-sr04",
   "hc-sr04": "hc-sr04",
   "ultrasonic": "hc-sr04",
-  "wokwi-dht22": "dht11",
-  "dht22": "dht11",
+  "wokwi-dht22": "dht22",
+  "dht22": "dht22",
   "wokwi-dht11": "dht11",
   "dht11": "dht11",
-  "wokwi-ssd1306": "lcd1602",
-  "ssd1306": "lcd1602",
-  "oled": "lcd1602",
+  "wokwi-ssd1306": "ssd1306",
+  "ssd1306": "ssd1306",
+  "oled": "ssd1306",
   "wokwi-lcd1602": "lcd1602",
   "lcd1602": "lcd1602",
   "wokwi-potentiometer": "potentiometer",
@@ -80,10 +80,16 @@ const TYPE_MAP: Record<string, string> = {
   "push-button": "push-button",
   "wokwi-relay": "relay",
   "relay": "relay",
-  "wokwi-pir-motion-sensor": "tilt-switch",
-  "pir": "tilt-switch",
-  "wokwi-photoresistor-sensor": "potentiometer",
-  "photoresistor": "potentiometer",
+  "wokwi-pir-motion-sensor": "pir-motion-sensor",
+  "pir": "pir-motion-sensor",
+  "pir-motion-sensor": "pir-motion-sensor",
+  "wokwi-photoresistor-sensor": "photoresistor",
+  "photoresistor": "photoresistor",
+  "photoresistor-sensor": "photoresistor",
+  "ldr": "photoresistor",
+  "motor": "dc-motor",
+  "dc-motor": "dc-motor",
+  "dcmotor": "dc-motor",
   "breadboard": "breadboard",
   "battery": "battery",
   "rgb-led": "rgb-led",
@@ -170,6 +176,38 @@ function resolvePinName(compType: string, rawPin: string, availablePinNames: str
     if (["PWM", "SIG", "SIGNAL", "DATA"].includes(upperPin)) return "signal"
     if (["VCC", "V+", "5V", "+"].includes(upperPin)) return "vcc"
     if (["GND", "-"].includes(upperPin)) return "gnd"
+  }
+
+  if (compType === "ssd1306") {
+    if (["GND", "-", "GROUND"].includes(upperPin)) return "GND"
+    if (["VCC", "+", "5V", "3V3", "3.3V"].includes(upperPin)) return "VCC"
+    if (["SCL", "SCK", "CLOCK"].includes(upperPin)) return "SCL"
+    if (["SDA", "DATA"].includes(upperPin)) return "SDA"
+  }
+
+  if (compType === "dht22") {
+    if (["VCC", "5V", "3V3", "3.3V", "+"].includes(upperPin)) return "VCC"
+    if (["SDA", "DATA", "SIG", "OUT"].includes(upperPin)) return "SDA"
+    if (["NC"].includes(upperPin)) return "NC"
+    if (["GND", "-", "GROUND"].includes(upperPin)) return "GND"
+  }
+
+  if (compType === "dc-motor") {
+    if (["+", "POS", "VCC", "1", "T1", "A"].includes(upperPin)) return "+"
+    if (["-", "NEG", "GND", "2", "T2", "B"].includes(upperPin)) return "-"
+  }
+
+  if (compType === "photoresistor") {
+    if (["VCC", "+", "5V", "3V3", "3.3V"].includes(upperPin)) return "VCC"
+    if (["GND", "-", "GROUND"].includes(upperPin)) return "GND"
+    if (["DO", "DIGITAL", "OUT", "D"].includes(upperPin)) return "DO"
+    if (["AO", "ANALOG", "SIG", "A"].includes(upperPin)) return "AO"
+  }
+
+  if (compType === "pir-motion-sensor") {
+    if (["VCC", "+", "5V", "3V3", "3.3V"].includes(upperPin)) return "VCC"
+    if (["OUT", "SIG", "SIGNAL", "DATA", "D"].includes(upperPin)) return "OUT"
+    if (["GND", "-", "GROUND"].includes(upperPin)) return "GND"
   }
 
   if (compType === "potentiometer") {

@@ -17,33 +17,29 @@ interface PinHitAreaProps {
 // nothing once someone zooms out -- this compensates so a pin stays
 // tappable at any zoom level, without inflating it into overlapping
 // neighboring pins when zoomed in tight.
-const TARGET_SCREEN_RADIUS = 11
-const MAX_WORLD_RADIUS = 13
+const TARGET_SCREEN_RADIUS = 16
+const MAX_WORLD_RADIUS = 20
 
 function PinHitAreaInner({
   pin,
+  componentId,
   onClick,
   onPointerDown,
   radius = 7,
 }: PinHitAreaProps) {
   const colorMap: Record<string, string> = {
-    power: "#E74C3C",
-    ground: "#3498DB",
-    digital: "#F1C40F",
-    analog: "#2ECC71",
-    passive: "#AAA",
+    power: "#EF4444",
+    ground: "#3B82F6",
+    digital: "#F59E0B",
+    analog: "#10B981",
+    passive: "#A855F7",
   }
   const [hovered, setHovered] = useState(false)
-  const color = colorMap[pin.type] ?? "#AAA"
+  const color = colorMap[pin.type] ?? "#94A3B8"
   const zoom = useViewportZoom()
   const hitRadius = Math.min(MAX_WORLD_RADIUS, Math.max(radius, TARGET_SCREEN_RADIUS / zoom))
 
   return (
-    // Pins stay invisible at rest — the component leads already show where
-    // they are — and only light up on hover/touch to confirm a connection
-    // point, keeping the board free of a colored dot on every pin. The
-    // visible dot stays at `radius`; the invisible hit area (`hitRadius`)
-    // is what actually catches the tap/click and grows on zoom-out.
     <>
       {hitRadius > radius && (
         <circle
@@ -53,6 +49,7 @@ function PinHitAreaInner({
           fill="transparent"
           style={{ cursor: "crosshair", pointerEvents: "all" }}
           data-pin-id={pin.id}
+          data-component-id={componentId}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
           onClick={(e) => {
@@ -72,14 +69,15 @@ function PinHitAreaInner({
         cy={pin.y}
         r={radius}
         fill={hovered ? color : "transparent"}
-        fillOpacity={hovered ? 0.8 : 0}
+        fillOpacity={hovered ? 0.85 : 0}
         stroke={hovered ? color : "transparent"}
-        strokeWidth={1}
+        strokeWidth={1.5}
         style={{
           cursor: "crosshair",
           pointerEvents: hitRadius > radius ? "none" : "all",
         }}
         data-pin-id={pin.id}
+        data-component-id={componentId}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         onClick={(e) => {
@@ -93,6 +91,42 @@ function PinHitAreaInner({
         }}
         onPointerUp={() => setHovered(false)}
       />
+      {hovered && (
+        <g pointerEvents="none" className="z-50 select-none">
+          <circle
+            cx={pin.x}
+            cy={pin.y}
+            r={radius + 4}
+            fill="none"
+            stroke={color}
+            strokeWidth={1.5}
+            strokeDasharray="3 3"
+            opacity={0.9}
+          />
+          <rect
+            x={pin.x - (pin.name.length * 3.5 + 6)}
+            y={pin.y - 21}
+            width={pin.name.length * 7 + 12}
+            height={15}
+            rx={3}
+            fill="#090d16"
+            stroke={color}
+            strokeWidth={1}
+            filter="url(#sim-drop-shadow-sm)"
+          />
+          <text
+            x={pin.x}
+            y={pin.y - 10}
+            fill="#f8fafc"
+            fontSize={8}
+            fontWeight="bold"
+            textAnchor="middle"
+            fontFamily="monospace"
+          >
+            {pin.name}
+          </text>
+        </g>
+      )}
     </>
   )
 }

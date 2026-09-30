@@ -18,6 +18,11 @@ import { servoDefinition } from "@/lib/simulator/components/servo/definition"
 import { tiltSwitchDefinition } from "@/lib/simulator/components/tilt-switch/definition"
 import { rgbLedDefinition } from "@/lib/simulator/components/rgb-led/definition"
 import { irReceiverDefinition } from "@/lib/simulator/components/ir-receiver/definition"
+import { dcMotorDefinition } from "@/lib/simulator/components/dc-motor/definition"
+import { photoresistorDefinition } from "@/lib/simulator/components/photoresistor/definition"
+import { pirMotionSensorDefinition } from "@/lib/simulator/components/pir-motion-sensor/definition"
+import { ssd1306Definition } from "@/lib/simulator/components/ssd1306/definition"
+import { dht22Definition } from "@/lib/simulator/components/dht22/definition"
 
 const DEFINITIONS: ComponentDefinition[] = [
   arduinoUnoDefinition,
@@ -27,10 +32,15 @@ const DEFINITIONS: ComponentDefinition[] = [
   resistorDefinition,
   pushButtonDefinition,
   buzzerDefinition,
+  dcMotorDefinition,
   relayDefinition,
   potentiometerDefinition,
+  photoresistorDefinition,
+  pirMotionSensorDefinition,
   dht11Definition,
+  dht22Definition,
   lcd1602Definition,
+  ssd1306Definition,
   batteryDefinition,
   slideSwitchDefinition,
   speakerDefinition,
@@ -41,12 +51,33 @@ const DEFINITIONS: ComponentDefinition[] = [
   irReceiverDefinition,
 ]
 
+const ALIASES: Record<string, string> = {
+  "wokwi-esp32-devkit-v1": "esp32-devkit",
+  "wokwi-dht22": "dht22",
+  "wokwi-ssd1306": "ssd1306",
+  "wokwi-hc-sr04": "hc-sr04",
+  "wokwi-pir-motion-sensor": "pir-motion-sensor",
+  "wokwi-buzzer": "buzzer",
+  "wokwi-servo": "servo",
+  "wokwi-photoresistor-sensor": "photoresistor",
+  "photoresistor-sensor": "photoresistor",
+  "ldr": "photoresistor",
+  "wokwi-potentiometer": "potentiometer",
+  "wokwi-led": "led",
+  "wokwi-pushbutton": "push-button",
+  "wokwi-resistor": "resistor",
+  "motor": "dc-motor",
+  "dcmotor": "dc-motor",
+  "oled": "ssd1306",
+}
+
 const registry = new Map<string, ComponentDefinition>(
   DEFINITIONS.map((d) => [d.type, d])
 )
 
 export function getComponentDefinition(type: string): ComponentDefinition | undefined {
-  return registry.get(type)
+  const resolved = ALIASES[type] || type
+  return registry.get(resolved)
 }
 
 export function getAllDefinitions(): ComponentDefinition[] {

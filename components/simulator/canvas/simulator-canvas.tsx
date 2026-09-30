@@ -33,6 +33,7 @@ export function SimulatorCanvas() {
     cancelWire,
     cancelRewire,
     startRewire,
+    completeWire,
   } = useWireDrawing()
 
   const containerRef = useRef<HTMLDivElement>(null)
@@ -175,15 +176,54 @@ export function SimulatorCanvas() {
       const world = screenToWorld(detail.clientX, detail.clientY, viewport, rect)
       const component = createPlacedComponent(def, snapToGrid(world.x), snapToGrid(world.y))
       dispatch({ type: "ADD_COMPONENT", component })
+      dispatch({ type: "SELECT_COMPONENT", id: component.id })
     }
     window.addEventListener("simulator:touch-drop", handleTouchDrop)
     return () => window.removeEventListener("simulator:touch-drop", handleTouchDrop)
   }, [viewport, dispatch])
 
+  // Click-to-add listener for immediate placement from parts palette
+  useEffect(() => {
+    const handleClickAdd = (e: Event) => {
+      const detail = (e as CustomEvent<{ type: string }>).detail
+      if (!detail?.type || !containerRef.current) return
+
+      const def = getComponentDefinition(detail.type)
+      if (!def) return
+
+      const rect = containerRef.current.getBoundingClientRect()
+      // Center on current viewport with gentle cascade offset
+      const count = state.components.length
+      const offset = (count % 6) * 24
+      const centerX = rect.width / 2 + offset
+      const centerY = rect.height / 2 + offset
+      const world = screenToWorld(centerX, centerY, viewport, rect)
+
+      const component = createPlacedComponent(
+        def,
+        snapToGrid(world.x),
+        snapToGrid(world.y)
+      )
+      dispatch({ type: "ADD_COMPONENT", component })
+      dispatch({ type: "SELECT_COMPONENT", id: component.id })
+    }
+
+    window.addEventListener("simulator:click-add", handleClickAdd)
+    return () => window.removeEventListener("simulator:click-add", handleClickAdd)
+  }, [viewport, dispatch, state.components.length])
+
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
       e.preventDefault()
-      const type = e.dataTransfer.getData("application/simulator-component")
+      e.stopPropagation()
+
+      const type =
+        e.dataTransfer.getData("application/simulator-component") ||
+        e.dataTransfer.getData("text/plain") ||
+        (typeof window !== "undefined"
+          ? (window as unknown as { __draggedSimulatorComponent?: string }).__draggedSimulatorComponent
+          : null)
+
       if (!type || !containerRef.current) return
 
       const def = getComponentDefinition(type)
@@ -197,12 +237,18 @@ export function SimulatorCanvas() {
         snapToGrid(world.y)
       )
       dispatch({ type: "ADD_COMPONENT", component })
+      dispatch({ type: "SELECT_COMPONENT", id: component.id })
+
+      if (typeof window !== "undefined") {
+        ;(window as unknown as { __draggedSimulatorComponent?: string | null }).__draggedSimulatorComponent = null
+      }
     },
     [viewport, dispatch]
   )
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault()
+    e.stopPropagation()
     e.dataTransfer.dropEffect = "copy"
   }, [])
 
@@ -311,8 +357,9 @@ export function SimulatorCanvas() {
     const target = document.elementFromPoint(clientX, clientY)
     const pinElement = target?.closest("[data-pin-id]") as HTMLElement | null
     if (!pinElement) return null
-    const componentElement = pinElement.closest("[data-component-id]")
-    const componentId = componentElement?.getAttribute("data-component-id")
+    const componentId =
+      pinElement.getAttribute("data-component-id") ||
+      pinElement.closest("[data-component-id]")?.getAttribute("data-component-id")
     const pinId = pinElement.getAttribute("data-pin-id")
     if (!componentId || !pinId) return null
     return { componentId, pinId }
@@ -325,8 +372,6 @@ export function SimulatorCanvas() {
         if (touchPoints.current.size < 2) {
           isPinching.current = false
         }
-        // A finger lifted mid-pinch — don't let the remaining single
-        // pointer resume a pan/drag/wire-drop from its last position.
         if (touchPoints.current.size >= 1) {
           dragRef.current = null
           endPan()
@@ -344,7 +389,20 @@ export function SimulatorCanvas() {
         } else {
           cancelRewire()
         }
-      } else if (!state.wireDraft) {
+      } else if (state.wireDraft) {
+        // Drag-and-release wire completion!
+        const target = resolvePinTarget(e.clientX, e.clientY)
+        if (
+          target &&
+          !(
+            target.componentId === state.wireDraft.fromComponentId &&
+            target.pinId === state.wireDraft.fromPinId
+          )
+        ) {
+          completeWire(target.componentId, target.pinId)
+        }
+        // If not released over another pin, we keep wireDraft alive so click-to-connect keeps following cursor!
+      } else {
         cancelWire()
         cancelRewire()
       }
@@ -355,7 +413,7 @@ export function SimulatorCanvas() {
         // pointer may not be captured
       }
     },
-    [endPan, cancelWire, cancelRewire, state.wireDraft, state.rewireDraft, resolvePinTarget, handlePinClick]
+    [endPan, cancelWire, cancelRewire, state.wireDraft, state.rewireDraft, resolvePinTarget, handlePinClick, completeWire]
   )
 
   const handleComponentDragStart = useCallback(
@@ -387,12 +445,16 @@ export function SimulatorCanvas() {
       className="absolute inset-0 z-0 overflow-hidden bg-canvas-bg"
       onDrop={handleDrop}
       onDragOver={handleDragOver}
+      onDragEnter={handleDragOver}
     >
       <svg
         ref={svgRef}
         width={dimensions.width}
         height={dimensions.height}
         className="absolute inset-0 touch-none select-none"
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        onDragEnter={handleDragOver}
         onWheel={(e) => {
           if (containerRef.current) {
             handleWheel(e, containerRef.current.getBoundingClientRect())

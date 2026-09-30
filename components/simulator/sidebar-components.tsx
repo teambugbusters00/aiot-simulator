@@ -60,7 +60,17 @@ export function ComponentsSidebar({ isOpen, onClose }: ComponentsSidebarProps) {
 
   const handleDragStart = useCallback((e: React.DragEvent, type: string) => {
     e.dataTransfer.setData("application/simulator-component", type)
+    e.dataTransfer.setData("text/plain", type)
+    if (typeof window !== "undefined") {
+      ;(window as unknown as { __draggedSimulatorComponent?: string }).__draggedSimulatorComponent = type
+    }
     e.dataTransfer.effectAllowed = "copy"
+  }, [])
+
+  const handleDragEnd = useCallback(() => {
+    if (typeof window !== "undefined") {
+      ;(window as unknown as { __draggedSimulatorComponent?: string | null }).__draggedSimulatorComponent = null
+    }
   }, [])
 
   const touchDragRef = useRef<{
@@ -143,7 +153,7 @@ export function ComponentsSidebar({ isOpen, onClose }: ComponentsSidebarProps) {
               <X className="size-4" />
             </button>
           </div>
-          <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">Drag a part onto the workbench</p>
+          <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">Click or drag a part onto the workbench</p>
 
           {/* Search */}
           <div className="relative mt-2.5">
@@ -212,16 +222,24 @@ export function ComponentsSidebar({ isOpen, onClose }: ComponentsSidebarProps) {
                     key={item.type}
                     draggable
                     onDragStart={(e) => handleDragStart(e, item.type)}
+                    onDragEnd={handleDragEnd}
+                    onClick={() => {
+                      window.dispatchEvent(
+                        new CustomEvent("simulator:click-add", {
+                          detail: { type: item.type },
+                        })
+                      )
+                    }}
                     onPointerDown={(e) => handlePointerDown(e, item.type, item.name)}
                     onPointerMove={handlePointerMove}
                     onPointerUp={handlePointerUp}
                     onPointerCancel={handlePointerUp}
-                    title={`Drag ${item.name} to canvas`}
+                    title={`Click to add or drag ${item.name} to canvas`}
                     className={cn(
-                      "group flex cursor-grab items-center gap-2 rounded-lg border border-transparent",
+                      "group flex cursor-pointer select-none items-center gap-2 rounded-lg border border-transparent",
                       "bg-background/40 px-2 py-1.5 transition-all duration-150",
                       "hover:border-primary/30 hover:bg-primary/[0.04] hover:shadow-sm",
-                      "active:cursor-grabbing active:scale-[0.98]",
+                      "active:scale-[0.98]",
                     )}
                   >
                     <GripVertical className="size-3 shrink-0 text-muted-foreground/40 group-hover:text-muted-foreground" />

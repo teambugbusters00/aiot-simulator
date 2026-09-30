@@ -35,8 +35,11 @@ function PlacedComponentItemInner({
   const handlePinPointerDown = useCallback(
     (pinId: string, e: React.PointerEvent) => {
       e.stopPropagation()
+      if (!state.wireDraft && !state.rewireDraft) {
+        onPinClick(component.id, pinId)
+      }
     },
-    []
+    [component.id, onPinClick, state.wireDraft, state.rewireDraft]
   )
 
   return (
@@ -47,16 +50,48 @@ function PlacedComponentItemInner({
       className="origin-center animate-in fade-in zoom-in-95 duration-150"
       style={{ cursor: "grab" }}
       onClick={(e) => {
-        if (component.type === "push-button" || component.type === "slide-switch") {
-          e.stopPropagation()
-          const metadataUpdate =
-            component.type === "push-button"
-              ? { pressed: component.metadata.pressed !== true }
-              : { on: component.metadata.on !== true }
+        if ((e.target as Element).closest("[data-pin-id]")) return
+        e.stopPropagation()
+
+        if (component.type === "push-button") {
           dispatch({
             type: "UPDATE_METADATA",
             id: component.id,
-            metadata: metadataUpdate,
+            metadata: { pressed: component.metadata.pressed !== true },
+          })
+        } else if (component.type === "slide-switch") {
+          dispatch({
+            type: "UPDATE_METADATA",
+            id: component.id,
+            metadata: { on: component.metadata.on !== true },
+          })
+        } else if (component.type === "tilt-switch") {
+          dispatch({
+            type: "UPDATE_METADATA",
+            id: component.id,
+            metadata: { tilted: component.metadata.tilted !== true },
+          })
+        } else if (component.type === "potentiometer") {
+          const cur = typeof component.metadata.position === "number" ? component.metadata.position : 0.5
+          const next = cur >= 0.95 ? 0.0 : Math.round((cur + 0.2) * 100) / 100
+          dispatch({
+            type: "UPDATE_METADATA",
+            id: component.id,
+            metadata: { position: next },
+          })
+        } else if (component.type === "photoresistor-sensor" || component.type === "photoresistor") {
+          const cur = typeof component.metadata.lightLevel === "number" ? component.metadata.lightLevel : 0.5
+          const next = cur > 0.5 ? 0.15 : 0.85
+          dispatch({
+            type: "UPDATE_METADATA",
+            id: component.id,
+            metadata: { lightLevel: next },
+          })
+        } else if (component.type === "pir-motion-sensor") {
+          dispatch({
+            type: "UPDATE_METADATA",
+            id: component.id,
+            metadata: { motionDetected: component.metadata.motionDetected !== true },
           })
         }
       }}

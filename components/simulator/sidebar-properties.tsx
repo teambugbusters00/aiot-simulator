@@ -479,6 +479,147 @@ export function PropertiesSidebar({ open = true, onClose }: { open?: boolean; on
           </PropertyGroup>
         )}
 
+        {selected.type === "dc-motor" && (
+          <PropertyGroup label="DC Motor">
+            <div className="space-y-2 text-xs">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Spinning</span>
+                <span className={cn("font-bold", sim?.flags.isSpinning ? "text-green-400" : "text-muted-foreground")}>
+                  {sim?.flags.isSpinning ? "YES" : "NO"}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Speed</span>
+                <span className="font-mono text-foreground">
+                  {Math.round(((sim?.flags.speed as number) || 0) * 100)}%
+                </span>
+              </div>
+            </div>
+          </PropertyGroup>
+        )}
+
+        {selected.type === "photoresistor" && (
+          <PropertyGroup label="Light Intensity">
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs">
+                <span className="text-muted-foreground">Ambient brightness</span>
+                <span className="font-mono text-foreground">
+                  {Math.round(((selected.metadata.lightLevel as number) ?? 0.5) * 100)}%
+                </span>
+              </div>
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={Math.round(((selected.metadata.lightLevel as number) ?? 0.5) * 100)}
+                onChange={(e) =>
+                  dispatch({
+                    type: "UPDATE_METADATA",
+                    id: selected.id,
+                    metadata: { lightLevel: Number(e.target.value) / 100 },
+                  })
+                }
+                className="w-full"
+              />
+            </div>
+          </PropertyGroup>
+        )}
+
+        {selected.type === "pir-motion-sensor" && (
+          <PropertyGroup label="Motion Sensor">
+            <Button
+              size="sm"
+              variant={selected.metadata.motionDetected ? "default" : "outline"}
+              className="w-full text-xs"
+              onClick={() => {
+                dispatch({
+                  type: "UPDATE_METADATA",
+                  id: selected.id,
+                  metadata: { motionDetected: true },
+                })
+                setTimeout(() => {
+                  dispatch({
+                    type: "UPDATE_METADATA",
+                    id: selected.id,
+                    metadata: { motionDetected: false },
+                  })
+                }, 2000)
+              }}
+            >
+              {selected.metadata.motionDetected ? "Motion Active! (2s)" : "Trigger Motion"}
+            </Button>
+          </PropertyGroup>
+        )}
+
+        {selected.type === "ssd1306" && (
+          <PropertyGroup label="OLED Display Text">
+            <textarea
+              rows={3}
+              value={typeof selected.metadata.text === "string" ? selected.metadata.text : ""}
+              onChange={(e) =>
+                dispatch({
+                  type: "UPDATE_METADATA",
+                  id: selected.id,
+                  metadata: { text: e.target.value },
+                })
+              }
+              placeholder="Display text (lines)..."
+              className="w-full rounded-md border border-border bg-background p-2 font-mono text-xs"
+            />
+          </PropertyGroup>
+        )}
+
+        {selected.type === "dht22" && (
+          <PropertyGroup label="Environmental Readings">
+            <div className="space-y-3">
+              <div>
+                <div className="mb-1 flex justify-between text-xs">
+                  <span className="text-muted-foreground">Temperature</span>
+                  <span className="font-mono text-foreground">
+                    {typeof selected.metadata.temperature === "number" ? selected.metadata.temperature : 25}°C
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min={-40}
+                  max={80}
+                  value={typeof selected.metadata.temperature === "number" ? selected.metadata.temperature : 25}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "UPDATE_METADATA",
+                      id: selected.id,
+                      metadata: { temperature: Number(e.target.value) },
+                    })
+                  }
+                  className="w-full"
+                />
+              </div>
+              <div>
+                <div className="mb-1 flex justify-between text-xs">
+                  <span className="text-muted-foreground">Humidity</span>
+                  <span className="font-mono text-foreground">
+                    {typeof selected.metadata.humidity === "number" ? selected.metadata.humidity : 42}%
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={typeof selected.metadata.humidity === "number" ? selected.metadata.humidity : 42}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "UPDATE_METADATA",
+                      id: selected.id,
+                      metadata: { humidity: Number(e.target.value) },
+                    })
+                  }
+                  className="w-full"
+                />
+              </div>
+            </div>
+          </PropertyGroup>
+        )}
+
         {/* Simulation state */}
         {sim && Object.keys(sim.flags).length > 0 && (
           <PropertyGroup label="Simulation">

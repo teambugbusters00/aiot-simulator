@@ -75,6 +75,36 @@ const HARDWARE_CATALOG = [
     name: "5V Relay Module",
     pins: ["coil-", "coil+", "NO", "COM", "NC"],
     hint: "Electromechanical relay for switching high voltage / current loads."
+  },
+  {
+    id: "ssd1306",
+    name: "SSD1306 OLED Display (128x64)",
+    pins: ["GND", "VCC", "SCL", "SDA"],
+    hint: "128x64 I2C monochrome OLED display module."
+  },
+  {
+    id: "dht22",
+    name: "DHT22 Precision Temp/Humidity",
+    pins: ["VCC", "SDA", "NC", "GND"],
+    hint: "High-precision digital temperature & humidity sensor."
+  },
+  {
+    id: "dc-motor",
+    name: "DC Motor",
+    pins: ["+", "-"],
+    hint: "Electromechanical rotational motor with fan blades."
+  },
+  {
+    id: "photoresistor",
+    name: "Photoresistor / LDR Module",
+    pins: ["VCC", "GND", "DO", "AO"],
+    hint: "Ambient light detection sensor with analog and digital threshold outputs."
+  },
+  {
+    id: "pir-motion-sensor",
+    name: "PIR Motion Sensor",
+    pins: ["VCC", "OUT", "GND"],
+    hint: "Passive infrared motion sensor for human motion and security alarms."
   }
 ]
 
