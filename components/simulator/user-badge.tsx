@@ -1,54 +1,19 @@
 "use client"
 
-import { useState } from "react"
-import { UserCircle2 } from "lucide-react"
-import { useSolderHubSession } from "@/hooks/use-solderhub-session"
+import { Cpu, Sparkles } from "lucide-react"
 
-/**
- * Shows the signed-in SolderHub user (avatar + name) if this simulator
- * instance is wired to the main site (NEXT_PUBLIC_SOLDERHUB_URL), otherwise
- * a plain "Sign in" link. Degrades silently to signed-out — never blocks
- * or errors.
- */
 export function UserBadge() {
-  const { user, loading, signInUrl } = useSolderHubSession()
-  const [imgFailed, setImgFailed] = useState(false)
-
-  if (loading) return null
-
-  if (!user) {
-    return (
-      <a
-        href={signInUrl}
-        className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
-      >
-        Sign in
-      </a>
-    )
-  }
-
-  const showImage = Boolean(user.avatar_url) && !imgFailed
-
   return (
-    <a
-      href="https://solderhub.com"
-      className="flex items-center gap-2 text-xs font-medium text-foreground transition-opacity hover:opacity-80"
-      title={user.email}
+    <div
+      className="hidden items-center gap-1.5 rounded-full border border-border/80 bg-background/60 px-2.5 py-1 text-xs shadow-sm backdrop-blur-sm sm:flex"
+      title="AIoT Astra Studio — Gemini Hardware Engine Active"
     >
-      {showImage ? (
-        // eslint-disable-next-line @next/next/no-img-element -- external
-        // avatar from solderhub.com, not a local/optimizable asset
-        <img
-          src={user.avatar_url!}
-          alt=""
-          referrerPolicy="no-referrer"
-          onError={() => setImgFailed(true)}
-          className="size-6 shrink-0 rounded-full object-cover"
-        />
-      ) : (
-        <UserCircle2 className="size-6 shrink-0 text-muted-foreground" />
-      )}
-      <span className="hidden sm:inline">{user.full_name ?? user.email}</span>
-    </a>
+      <span className="relative flex size-2">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+        <span className="relative inline-flex size-2 rounded-full bg-emerald-500"></span>
+      </span>
+      <span className="font-semibold text-foreground tracking-tight">AIoT Astra</span>
+      <span className="text-[10px] text-muted-foreground font-mono">v1.0</span>
+    </div>
   )
 }

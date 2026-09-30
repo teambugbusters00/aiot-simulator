@@ -20,6 +20,7 @@ import {
   ExternalLink,
   Code2,
   Zap,
+  Sparkles,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -41,6 +42,7 @@ interface SimulatorToolbarProps {
   onToggleCodeEditor: () => void
   isCodeEditorOpen: boolean
   onImportError?: (message: string) => void
+  onToggleAIModal?: () => void
 }
 
 export function SimulatorToolbar({
@@ -56,6 +58,7 @@ export function SimulatorToolbar({
   onToggleCodeEditor,
   isCodeEditorOpen,
   onImportError,
+  onToggleAIModal,
 }: SimulatorToolbarProps) {
   const { state, dispatch, undo, redo, canUndo, canRedo } = useSimulator()
   const { theme, toggleTheme } = useTheme()
@@ -84,7 +87,7 @@ export function SimulatorToolbar({
   const handleSave = async () => {
     const payload = { components: state.components, wires: state.wires }
     const json = JSON.stringify(payload, null, 2)
-    const filename = "solderhub-circuit.json"
+    const filename = "aiot-circuit.json"
 
     try {
       if (navigator.clipboard?.writeText) {
@@ -120,7 +123,7 @@ export function SimulatorToolbar({
       }
       dispatch({ type: "LOAD_STATE", state: { components: data.components, wires: data.wires } })
     } catch {
-      onImportError?.("Couldn't read that file — expected a SolderHub circuit JSON export.")
+      onImportError?.("Couldn't read that file — expected an AIoT circuit JSON export.")
     }
   }
 
@@ -150,19 +153,22 @@ export function SimulatorToolbar({
       </Button>
 
       {/* Brand */}
-      <a
-        href="https://solderhub.com"
-        className="flex shrink-0 items-center gap-2.5 pr-1 transition-opacity hover:opacity-80 sm:pr-3"
-        title="Back to SolderHub"
+      <Link
+        href="/"
+        className="flex shrink-0 items-center gap-2.5 pr-1 transition-opacity hover:opacity-85 sm:pr-3"
+        title="AIoT Astra Simulator"
       >
-        <div className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm shadow-primary/20">
+        <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 text-white shadow-sm shadow-blue-500/30">
           <CircuitBoard className="size-4" />
         </div>
         <div className="hidden leading-tight sm:block">
-          <p className="text-[13px] font-bold tracking-tight text-foreground">SolderHub</p>
-          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Workbench</p>
+          <p className="text-[13px] font-bold tracking-tight text-foreground flex items-center gap-1.5">
+            AIoT Astra
+            <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.2 rounded-full bg-primary/15 text-primary">AI</span>
+          </p>
+          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Virtual Lab</p>
         </div>
-      </a>
+      </Link>
 
       <Separator orientation="vertical" className="mx-1 hidden h-5 sm:block" />
 
@@ -202,6 +208,16 @@ export function SimulatorToolbar({
 
         {/* File actions */}
         <div className="flex shrink-0 items-center gap-1">
+        <Button
+          size="sm"
+          variant="default"
+          onClick={onToggleAIModal}
+          className="h-9 gap-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-sm shadow-purple-500/25 hover:opacity-90 border-0"
+          title="AI Circuit Architect — Generate circuits with Gemini AI"
+        >
+          <Sparkles className="size-3.5" />
+          <span className="font-semibold">AI Circuit</span>
+        </Button>
         <div className="relative" ref={projectsMenuRef}>
           <Button
             size="sm"
@@ -302,10 +318,8 @@ export function SimulatorToolbar({
           {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
         </Button>
         <a
-          href="https://github.com/solderhubofficial/solderhub-simulator"
-          target="_blank"
-          rel="noopener noreferrer"
-          title="View on GitHub"
+          href="/"
+          title="AIoT Astra Virtual Lab"
           className="tap-pad hidden size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:flex"
         >
           <ExternalLink className="size-4" />

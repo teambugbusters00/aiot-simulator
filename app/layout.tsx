@@ -15,9 +15,9 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "SolderHub Simulator",
+  title: "AIoT Astra Simulator | Interactive IoT Circuit Simulation & AI Generation",
   description:
-    "Open-source interactive Arduino & ESP32 circuit simulator — drag components, wire pins, and run simulations in the browser.",
+    "AI-powered interactive circuit simulator for Arduino and ESP32 with automated schematic generation, in-browser firmware emulation, and hardware design.",
 }
 
 export const viewport: Viewport = {
@@ -29,7 +29,7 @@ export const viewport: Viewport = {
 
 // Runs before hydration so the correct theme class is on <html> for the very
 // first paint — avoids a light-mode flash for users who prefer dark.
-const THEME_INIT_SCRIPT = `(function(){try{var stored=localStorage.getItem('solderhub-theme');var dark=stored?stored==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(dark){document.documentElement.classList.add('dark');}}catch(e){}})();`
+const THEME_INIT_SCRIPT = `(function(){try{var stored=localStorage.getItem('aiot-theme');var dark=stored?stored==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(dark){document.documentElement.classList.add('dark');}}catch(e){}})();`
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

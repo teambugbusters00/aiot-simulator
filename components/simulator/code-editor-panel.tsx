@@ -22,7 +22,7 @@ void loop() {
 }
 `
 
-const STORAGE_KEY = "solderhub-simulator:sketch-draft"
+const STORAGE_KEY = "aiot-simulator:sketch-draft"
 
 interface CodeEditorPanelProps {
   open: boolean

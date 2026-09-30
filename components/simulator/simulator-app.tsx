@@ -13,6 +13,7 @@ import { FirmwareRunner, type ActiveFirmware } from "@/components/simulator/firm
 import { StatusBar } from "@/components/simulator/status-bar"
 import { KeyboardShortcuts } from "@/components/simulator/keyboard-shortcuts"
 import { CodeEditorPanel } from "@/components/simulator/code-editor-panel"
+import { AICircuitModal } from "@/components/simulator/ai-circuit-modal"
 import type { SimulatorProject } from "@/lib/simulator/firmware/projects"
 
 export function SimulatorApp() {
@@ -34,6 +35,7 @@ export function SimulatorApp() {
   const [isStreamingProject, setIsStreamingProject] = useState(false)
   const [shortcutsOpen, setShortcutsOpen] = useState(false)
   const [isCodeEditorOpen, setCodeEditorOpen] = useState(false)
+  const [isAIModalOpen, setAIModalOpen] = useState(false)
   const requestTokenRef = useRef(0)
 
   const requestProject = (project: SimulatorProject) => {
@@ -82,6 +84,7 @@ export function SimulatorApp() {
           onToggleCodeEditor={toggleCodeEditor}
           isCodeEditorOpen={isCodeEditorOpen}
           onImportError={setLoadError}
+          onToggleAIModal={() => setAIModalOpen(true)}
         />
 
         <div className="relative flex min-h-0 flex-1">
@@ -100,6 +103,11 @@ export function SimulatorApp() {
               open={isCodeEditorOpen}
               onClose={() => setCodeEditorOpen(false)}
               onFirmwareLoaded={setActiveFirmware}
+            />
+            <AICircuitModal
+              open={isAIModalOpen}
+              onClose={() => setAIModalOpen(false)}
+              onOpenCodeEditor={() => setCodeEditorOpen(true)}
             />
           </main>
         </div>

@@ -3,7 +3,7 @@ import Link from "next/link"
 import { EspFlasherPanel } from "@/components/simulator/esp-flasher-panel"
 
 export const metadata: Metadata = {
-  title: "ESP Flasher — SolderHub Simulator",
+  title: "ESP Flasher — AIoT Astra Simulator",
   description: "Flash real ESP32 hardware over USB, straight from the browser.",
 }
 

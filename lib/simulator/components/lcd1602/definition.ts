@@ -15,7 +15,7 @@ export const lcd1602Definition: ComponentDefinition = {
     { name: "SDA", type: "digital", x: 258, y: 130 },
     { name: "SCL", type: "digital", x: 276, y: 130 },
   ],
-  defaultMetadata: { line1: "Hello, World!", line2: "SolderHub Sim", backlight: true },
+  defaultMetadata: { line1: "Hello, World!", line2: "AIoT Astra", backlight: true },
   canConnectPins: defaultCanConnectPins,
   getInternalConnections: () => [],
   simulate: simulateLcd1602,

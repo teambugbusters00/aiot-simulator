@@ -1,20 +1,8 @@
-# SolderHub Simulator
+# AIoT Astra Simulator
 
-[![CI](https://github.com/solderhubofficial/solderhub-simulator/actions/workflows/ci.yml/badge.svg)](https://github.com/solderhubofficial/solderhub-simulator/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
-[![Good first issues](https://img.shields.io/github/issues/solderhubofficial/solderhub-simulator/good%20first%20issue)](https://github.com/solderhubofficial/solderhub-simulator/labels/good%20first%20issue)
-![Open Source Helpers](https://www.codetriage.com/solderhubofficial/solderhub-simulator/badges/users.svg) 
-
-An interactive, browser-based circuit simulator for Arduino and ESP32 —
-drag components onto a canvas, wire them up, and run a live simulation.
-No installs, no accounts, nothing to flash.
-
-This is the simulator that powers **[simulator.solderhub.com](https://simulator.solderhub.com)**,
-extracted here as a standalone, open-source project. Built for the maker
-community documented at **[solderhub.com](https://solderhub.com)** — Arduino,
-ESP32, Raspberry Pi, and STM32 pinouts, wiring guides, and tutorials.
-
-**[→ Live demo](https://simulator.solderhub.com)** &nbsp;·&nbsp; **[Contributing guide](./CONTRIBUTING.md)**
+An interactive, AI-powered browser-based circuit simulator for Arduino and ESP32 —
+prompt Gemini to generate circuits, drag components onto a canvas, wire them up, and run live simulations.
+No installs, no accounts, nothing to flash. Real-time net resolution, interactive firmware runner, and AI circuit synthesis.
 
 ## What it does
 

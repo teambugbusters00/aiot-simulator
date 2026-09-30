@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react"
 
 export type Theme = "light" | "dark"
 
-const STORAGE_KEY = "solderhub-theme"
+const STORAGE_KEY = "aiot-theme"
 
 export function useTheme() {
   // Always start at "light" so the very first client render is byte-for-byte
