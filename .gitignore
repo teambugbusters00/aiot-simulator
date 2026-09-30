@@ -30,3 +30,4 @@ next-env.d.ts
 
 # AVR toolchain, vendored fresh on every build -- see scripts/vendor-avr-toolchain.mjs
 /.avr-toolchain
+.vercel
