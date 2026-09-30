@@ -28,9 +28,24 @@ import {
 
 const QUICK_TEMPLATES = [
   {
-    title: "🌦️ Smart Weather Station",
-    prompt: "Connect an ESP32 to a DHT11 temperature/humidity sensor and an LCD1602 display",
-    desc: "ESP32 + DHT11 + LCD1602 I2C",
+    title: "🌦️ Smart Weather Station (OLED)",
+    prompt: "Connect an ESP32 to a DHT22 temperature/humidity sensor and an SSD1306 OLED display",
+    desc: "ESP32 + DHT22 + SSD1306 OLED",
+  },
+  {
+    title: "🚨 Motion Security Alarm",
+    prompt: "Connect an ESP32 to a PIR motion sensor and a piezo buzzer for motion detection alerting",
+    desc: "ESP32 + PIR Sensor + Buzzer",
+  },
+  {
+    title: "🌓 Smart Nightlight (LDR)",
+    prompt: "Connect an ESP32 to a photoresistor LDR sensor and an LED indicator",
+    desc: "ESP32 + Photoresistor + LED",
+  },
+  {
+    title: "🌀 DC Motor Speed Controller",
+    prompt: "Connect an Arduino Uno to a DC motor and a rotary potentiometer",
+    desc: "Arduino Uno + DC Motor + Potentiometer",
   },
   {
     title: "🤖 Obstacle Detection Alarm",

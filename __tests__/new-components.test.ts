@@ -100,4 +100,33 @@ describe("New Component Simulations & Wiring", () => {
     const invalidSamePin = canConnectPins(ardDef, d13, ardDef, d13, [], "ard1", "ard1")
     expect(invalidSamePin).toBe(false)
   })
+
+  it("translates AI generated circuit blueprint into canvas components and wires", async () => {
+    const { translateBlueprintToSimulator } = await import("@/lib/simulator/ai/circuit-translator")
+    const translated = translateBlueprintToSimulator({
+      logic: "ESP32 with OLED and DHT22",
+      components: [
+        { id: "esp32_1", type: "esp32-devkit" },
+        { id: "oled_1", type: "ssd1306" },
+        { id: "dht_1", type: "dht22" },
+      ],
+      wires: [
+        { from: "esp32_1:3V3", to: "oled_1:VCC" },
+        { from: "esp32_1:GND", to: "oled_1:GND" },
+        { from: "esp32_1:IO21", to: "oled_1:SDA" },
+        { from: "esp32_1:IO22", to: "oled_1:SCL" },
+        { from: "esp32_1:3V3", to: "dht_1:VCC" },
+        { from: "esp32_1:GND", to: "dht_1:GND" },
+        { from: "esp32_1:IO4", to: "dht_1:SDA" },
+      ],
+      arduinoCode: "void setup() {}",
+      bom: [],
+    })
+
+    expect(translated.components.length).toBe(3)
+    expect(translated.wires.length).toBe(7)
+    expect(translated.components[0].type).toBe("esp32-devkit")
+    expect(translated.components[1].type).toBe("ssd1306")
+    expect(translated.components[2].type).toBe("dht22")
+  })
 })
