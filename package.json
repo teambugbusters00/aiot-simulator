@@ -1,8 +1,43 @@
 {
   "name": "aiot-simulator",
   "version": "0.1.0",
-  "private": true,
   "description": "Interactive AIoT Arduino/ESP32 circuit simulator and AI hardware designer — AIoT Astra.",
+  "main": "lib/index.ts",
+  "types": "lib/index.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/teambugbusters00/aiot-simulator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/teambugbusters00/aiot-simulator/issues"
+  },
+  "homepage": "https://github.com/teambugbusters00/aiot-simulator#readme",
+  "author": "teambugbusters00 <jangidvijay840@gmail.com>",
+  "license": "MIT",
+  "keywords": [
+    "aiot",
+    "aiot-astra",
+    "iot",
+    "circuit-simulator",
+    "arduino",
+    "esp32",
+    "gemini",
+    "hardware-simulation",
+    "avr8js"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "lib",
+    "components",
+    "hooks",
+    "types",
+    "app",
+    "public",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "dev": "next dev",
     "prebuild": "node scripts/vendor-avr-toolchain.mjs",
