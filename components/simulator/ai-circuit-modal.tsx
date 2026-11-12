@@ -165,23 +165,23 @@ export function AICircuitModal({ open, onClose, onOpenCodeEditor }: AICircuitMod
       role="dialog"
       aria-modal="true"
     >
-      <div className="relative flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-border/80 bg-card shadow-2xl shadow-primary/10">
+      <div className="relative flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-emerald-500/20 bg-[#101816]/95 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.65),0_0_35px_rgba(0,168,143,0.08)]">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-border/80 bg-muted/40 px-5 py-4">
+        <div className="flex items-center justify-between border-b border-emerald-500/15 bg-[#0c1210]/60 px-5 py-4">
           <div className="flex items-center gap-2.5">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white shadow-md shadow-purple-500/25">
+            <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-500 text-black shadow-md shadow-emerald-500/25">
               <Sparkles className="size-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold tracking-tight text-foreground">
+                <h2 className="text-base font-bold tracking-tight text-white font-mono">
                   AI Circuit Architect
                 </h2>
-                <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                <span className="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-[10px] font-semibold text-emerald-400 font-mono">
                   AIoT Astra
                 </span>
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-muted-foreground font-mono">
                 Describe an IoT circuit in natural language — Gemini synthesizes the schematic, wiring, and code.
               </p>
             </div>
@@ -199,8 +199,8 @@ export function AICircuitModal({ open, onClose, onOpenCodeEditor }: AICircuitMod
         <div className="flex-1 overflow-y-auto p-5 space-y-4">
           {/* Prompt input */}
           <div className="space-y-2">
-            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Circuit Requirement Prompt
+            <label className="text-xs font-semibold uppercase tracking-wider text-emerald-400 font-mono">
+              [ Circuit Requirement Prompt ]
             </label>
             <div className="relative">
               <textarea
@@ -209,13 +209,13 @@ export function AICircuitModal({ open, onClose, onOpenCodeEditor }: AICircuitMod
                 placeholder="e.g., Connect an ESP32 to a DHT11 temperature sensor and a servo motor that turns when temperature rises..."
                 rows={3}
                 disabled={loading}
-                className="w-full resize-none rounded-xl border border-border/80 bg-background/80 p-3 text-sm text-foreground shadow-inner placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="w-full resize-none rounded-xl border border-emerald-500/20 bg-[#080d0b]/80 p-3 text-sm text-white placeholder:text-gray-500 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-400/40 transition-all font-mono"
               />
             </div>
 
             {/* Quick Template pills */}
             <div className="flex flex-wrap items-center gap-1.5 pt-1">
-              <span className="text-[11px] font-medium text-muted-foreground mr-1">Presets:</span>
+              <span className="text-[11px] font-medium text-muted-foreground mr-1 font-mono">Presets:</span>
               {QUICK_TEMPLATES.map((tmpl) => (
                 <button
                   key={tmpl.title}
@@ -225,7 +225,7 @@ export function AICircuitModal({ open, onClose, onOpenCodeEditor }: AICircuitMod
                     handleGenerate(tmpl.prompt)
                   }}
                   disabled={loading}
-                  className="rounded-full border border-border/70 bg-background/50 px-2.5 py-1 text-[11px] text-muted-foreground transition-all hover:border-primary/50 hover:bg-primary/[0.08] hover:text-foreground active:scale-95"
+                  className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] text-white/80 transition-all hover:border-emerald-400 hover:bg-emerald-400 hover:text-[#0c1210] active:scale-95 font-mono cursor-pointer"
                 >
                   {tmpl.title}
                 </button>
@@ -235,9 +235,9 @@ export function AICircuitModal({ open, onClose, onOpenCodeEditor }: AICircuitMod
 
           {/* Action button */}
           <div className="flex items-center justify-between pt-1">
-            <div className="text-xs text-muted-foreground">
+            <div className="text-xs text-muted-foreground font-mono">
               {loading && (
-                <span className="flex items-center gap-2 text-primary font-medium animate-pulse">
+                <span className="flex items-center gap-2 text-emerald-400 font-medium animate-pulse">
                   <Loader2 className="size-3.5 animate-spin" />
                   Synthesizing schematic & firmware...
                 </span>
@@ -246,7 +246,7 @@ export function AICircuitModal({ open, onClose, onOpenCodeEditor }: AICircuitMod
             <Button
               onClick={() => handleGenerate()}
               disabled={loading || !prompt.trim()}
-              className="gap-2 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white shadow-md shadow-purple-600/20 hover:opacity-90"
+              className="gap-2 rounded-full bg-white hover:bg-emerald-400 hover:text-black text-[#0c1210] border border-white font-bold uppercase tracking-wider text-xs shadow-sm transition-all font-mono cursor-pointer"
             >
               {loading ? (
                 <>

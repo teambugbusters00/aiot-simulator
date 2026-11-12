@@ -1,82 +1,94 @@
+@import url('https://api.fontshare.com/v2/css?f[]=chillax@300,400,500,600,700&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(0.965 0.012 80);
-  --foreground: oklch(0.19 0.025 255);
-  --card: oklch(0.985 0.008 80);
-  --card-foreground: oklch(0.19 0.025 255);
-  --popover: oklch(0.99 0.006 80);
-  --popover-foreground: oklch(0.19 0.025 255);
-  --primary: oklch(0.58 0.17 35);
-  --primary-foreground: oklch(0.99 0.01 80);
-  --secondary: oklch(0.91 0.018 80);
-  --secondary-foreground: oklch(0.24 0.025 255);
-  --muted: oklch(0.925 0.015 80);
-  --muted-foreground: oklch(0.46 0.025 255);
-  --accent: oklch(0.92 0.055 70);
-  --accent-foreground: oklch(0.32 0.07 35);
-  --destructive: oklch(0.55 0.22 25);
-  --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.84 0.02 80);
-  --input: oklch(0.89 0.018 80);
-  --ring: oklch(0.58 0.17 35);
-  --radius: 0.55rem;
+  --radius: 0.625rem;
+
+  /* AIoT Astra Emerald & Dark Atmospheric Theme matching http://localhost:5173/ */
+  --background: #0c1210;
+  --foreground: #ffffff;
+  --card: #101816;
+  --card-foreground: #ffffff;
+  --popover: #101816;
+  --popover-foreground: #ffffff;
+  --primary: #03aa5c;
+  --primary-foreground: #0c1210;
+  --secondary: #13201c;
+  --secondary-foreground: #ffffff;
+  --muted: #13201c;
+  --muted-foreground: #a1a1aa;
+  --accent: #13201c;
+  --accent-foreground: #03aa5c;
+  --destructive: #f386a1;
+  --destructive-foreground: #ffffff;
+  --border: rgba(16, 185, 129, 0.15);
+  --input: rgba(16, 185, 129, 0.2);
+  --ring: #00a88f;
+
+  /* TypeSafe AI Theme Tokens */
+  --ts-pink: #f386a1;
+  --ts-pink-light: rgba(243, 134, 161, 0.15);
+  --ts-magenta: #d45bb6;
+  --ts-green: #03aa5c;
+  --ts-teal: #09aea1;
+  --ts-dark: #f4f4f6;
+  --ts-border: rgba(16, 185, 129, 0.15);
+  --ts-border-dark: #13201c;
+  --ts-bg: #0c1210;
+  --ts-card: #101816;
+  --ts-muted: #a1a1aa;
 
   /* Simulator-specific tokens */
-  --canvas-bg: oklch(0.935 0.012 80);
-  --canvas-grid: oklch(0.84 0.018 80);
-  --canvas-grid-major: oklch(0.77 0.025 80);
-  --status-running: oklch(0.62 0.18 145);
-  --status-idle: oklch(0.72 0.14 75);
-  --status-error: oklch(0.58 0.2 25);
-  --wire-default: oklch(0.42 0.08 255);
-  --wire-selected: oklch(0.58 0.17 35);
-  --panel-glass: oklch(0.985 0.008 80 / 0.92);
+  --canvas-bg: #0c1210;
+  --canvas-grid: #13201c;
+  --canvas-grid-major: rgba(16, 185, 129, 0.2);
+  --status-running: #03aa5c;
+  --status-idle: #e69d27;
+  --status-error: #f386a1;
+  --wire-default: #00a88f;
+  --wire-selected: #03aa5c;
+  --panel-glass: rgba(16, 24, 22, 0.88);
 }
 
 .dark {
-  --background: oklch(0.14 0.02 260);
-  --foreground: oklch(0.95 0.008 250);
-  --card: oklch(0.18 0.022 260);
-  --card-foreground: oklch(0.95 0.008 250);
-  --popover: oklch(0.2 0.024 260);
-  --popover-foreground: oklch(0.95 0.008 250);
-  --primary: oklch(0.72 0.17 52);
-  --primary-foreground: oklch(0.12 0.02 52);
-  --secondary: oklch(0.24 0.025 260);
-  --secondary-foreground: oklch(0.92 0.008 250);
-  --muted: oklch(0.24 0.025 260);
-  --muted-foreground: oklch(0.65 0.02 260);
-  --accent: oklch(0.28 0.05 52);
-  --accent-foreground: oklch(0.92 0.008 250);
-  --destructive: oklch(0.55 0.18 25);
-  --destructive-foreground: oklch(0.95 0.008 250);
-  --border: oklch(0.28 0.025 260);
-  --input: oklch(0.26 0.025 260);
-  --ring: oklch(0.72 0.17 52);
+  --background: #0c1210;
+  --foreground: #ffffff;
+  --card: #101816;
+  --card-foreground: #ffffff;
+  --popover: #101816;
+  --popover-foreground: #ffffff;
+  --primary: #03aa5c;
+  --primary-foreground: #0c1210;
+  --secondary: #13201c;
+  --secondary-foreground: #ffffff;
+  --muted: #13201c;
+  --muted-foreground: #a1a1aa;
+  --accent: #13201c;
+  --accent-foreground: #03aa5c;
+  --destructive: #f386a1;
+  --destructive-foreground: #ffffff;
+  --border: rgba(16, 185, 129, 0.15);
+  --input: rgba(16, 185, 129, 0.2);
+  --ring: #00a88f;
 
-  --canvas-bg: oklch(0.12 0.018 260);
-  --canvas-grid: oklch(0.22 0.025 260);
-  --canvas-grid-major: oklch(0.28 0.03 260);
-  --status-running: oklch(0.68 0.17 145);
-  --status-idle: oklch(0.75 0.13 75);
-  --status-error: oklch(0.62 0.18 25);
-  --wire-default: oklch(0.55 0.1 250);
-  --wire-selected: oklch(0.72 0.17 52);
-  --panel-glass: oklch(0.18 0.022 260 / 0.92);
-}
-
-.dark body {
-  background-image: radial-gradient(circle at 12% 0%, oklch(0.3 0.035 45 / 0.22), transparent 32rem),
-    linear-gradient(135deg, oklch(0.14 0.02 260), oklch(0.12 0.025 235));
+  --canvas-bg: #0c1210;
+  --canvas-grid: #13201c;
+  --canvas-grid-major: rgba(16, 185, 129, 0.2);
+  --status-running: #03aa5c;
+  --status-idle: #e69d27;
+  --status-error: #f386a1;
+  --wire-default: #00a88f;
+  --wire-selected: #03aa5c;
+  --panel-glass: rgba(16, 24, 22, 0.88);
 }
 
 @theme inline {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --font-sans: 'Chillax', sans-serif;
+  --font-mono: 'Chillax', monospace;
+  --font-display: 'Chillax', sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -100,6 +112,9 @@
   --color-status-running: var(--status-running);
   --color-status-idle: var(--status-idle);
   --color-status-error: var(--status-error);
+  --color-wire-default: var(--wire-default);
+  --color-wire-selected: var(--wire-selected);
+  --color-panel-glass: var(--panel-glass);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -108,16 +123,26 @@
 
 @layer base {
   * {
+    font-family: 'Chillax', sans-serif;
     @apply border-border outline-ring/50;
   }
   html {
     overflow-x: clip;
+    font-family: 'Chillax', sans-serif;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
   }
   body {
-    @apply bg-background text-foreground antialiased;
-    background-image: radial-gradient(circle at 12% 0%, oklch(0.99 0.025 70 / 0.8), transparent 32rem),
-      linear-gradient(135deg, oklch(0.965 0.012 80), oklch(0.945 0.018 105));
+    background-color: #0c1210;
+    color: #ffffff;
+    font-family: 'Chillax', sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
     overflow-x: clip;
+  }
+  ::selection {
+    background-color: #34d399;
+    color: #0c1210;
   }
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-ring;
@@ -127,8 +152,9 @@
 @layer utilities {
   .sim-panel {
     background: var(--panel-glass);
-    backdrop-filter: blur(16px);
-    box-shadow: 0 10px 30px oklch(0.3 0.04 80 / 0.06);
+    backdrop-filter: blur(20px);
+    border-color: rgba(16, 185, 129, 0.15);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65), 0 0 35px rgba(0, 168, 143, 0.08);
   }
   .sim-scrollbar {
     scrollbar-width: thin;
@@ -143,9 +169,6 @@
     border-radius: 999px;
   }
 
-  /* Scrollable but scrollbar-free -- used for the toolbar's button strip
-     so it can scroll horizontally on narrow screens without an intrusive
-     scrollbar sitting in a 56px-tall header. */
   .no-scrollbar {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -154,11 +177,6 @@
     display: none;
   }
 
-  /* Expands a control's tap area on touch devices without changing its
-     visual size or affecting layout -- an invisible ::before that pads out
-     to (at least) a 44px square, the common touch-target minimum. Icon
-     buttons are visually small by design; this keeps them easy to hit on
-     a phone while staying compact everywhere else. */
   .tap-pad {
     position: relative;
   }

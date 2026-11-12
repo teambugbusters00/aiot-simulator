@@ -1,18 +1,5 @@
 import type { Metadata, Viewport } from "next"
-import { Inter, JetBrains_Mono } from "next/font/google"
 import "./globals.css"
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-})
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-jetbrains",
-  display: "swap",
-})
 
 export const metadata: Metadata = {
   title: "AIoT Astra Simulator | Interactive IoT Circuit Simulation & AI Generation",
@@ -27,17 +14,20 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 }
 
-// Runs before hydration so the correct theme class is on <html> for the very
-// first paint — avoids a light-mode flash for users who prefer dark.
-const THEME_INIT_SCRIPT = `(function(){try{var stored=localStorage.getItem('aiot-theme');var dark=stored?stored==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(dark){document.documentElement.classList.add('dark');}}catch(e){}})();`
+// Runs before hydration so dark theme class is immediately on <html>
+const THEME_INIT_SCRIPT = `(function(){try{document.documentElement.classList.add('dark');localStorage.setItem('aiot-theme','dark');}catch(e){}})();`
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
+        <link
+          rel="stylesheet"
+          href="https://api.fontshare.com/v2/css?f[]=chillax@300,400,500,600,700&display=swap"
+        />
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
-      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
+      <body className="font-sans antialiased bg-[#0c1210] text-white selection:bg-emerald-400 selection:text-[#0c1210]">
         {children}
       </body>
     </html>

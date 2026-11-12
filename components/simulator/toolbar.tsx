@@ -63,8 +63,16 @@ export function SimulatorToolbar({
   const { state, dispatch, undo, redo, canUndo, canRedo } = useSimulator()
   const { theme, toggleTheme } = useTheme()
   const [projectsOpen, setProjectsOpen] = useState(false)
+  const [tagWord, setTagWord] = useState<"IoT" | "AI">("IoT")
   const projectsMenuRef = useRef<HTMLDivElement>(null)
   const importInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTagWord((prev) => (prev === "IoT" ? "AI" : "IoT"))
+    }, 2200)
+    return () => clearInterval(timer)
+  }, [])
 
   useEffect(() => {
     if (!projectsOpen) return
@@ -129,7 +137,7 @@ export function SimulatorToolbar({
 
   return (
     <>
-    <header className="flex h-14 shrink-0 items-center gap-1 border-b border-border/80 bg-card/90 px-2 shadow-[0_1px_0_oklch(1_0_0_/_0.5)] backdrop-blur-xl sm:gap-2 sm:px-4">
+    <header className="flex h-14 shrink-0 items-center gap-1 border-b border-emerald-500/15 bg-[#0c1210]/80 px-2 shadow-[0_4px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl sm:gap-2 sm:px-4">
       {/* Mobile palette toggle */}
       <Button
         size="icon-sm"
@@ -158,19 +166,32 @@ export function SimulatorToolbar({
         className="flex shrink-0 items-center gap-2.5 pr-1 transition-opacity hover:opacity-85 sm:pr-3"
         title="AIoT Astra Simulator"
       >
-        <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 text-white shadow-sm shadow-blue-500/30">
+        <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-tr from-emerald-400 via-teal-500 to-cyan-500 text-black shadow-sm shadow-emerald-500/30">
           <CircuitBoard className="size-4" />
         </div>
-        <div className="hidden leading-tight sm:block">
+        <div className="hidden leading-tight sm:block font-mono">
           <p className="text-[13px] font-bold tracking-tight text-foreground flex items-center gap-1.5">
             AIoT Astra
-            <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.2 rounded-full bg-primary/15 text-primary">AI</span>
+            <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.2 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">AI</span>
           </p>
-          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Virtual Lab</p>
+          <p className="text-[10px] font-medium tracking-tight text-muted-foreground flex items-center gap-1">
+            <span>The all in one place for</span>
+            <span className="font-extrabold text-emerald-400">
+              {tagWord}
+            </span>
+          </p>
         </div>
       </Link>
 
       <Separator orientation="vertical" className="mx-1 hidden h-5 sm:block" />
+
+      {/* Animated Tag pill on header logo side */}
+      <div className="hidden xl:flex items-center gap-1.5 rounded-full bg-[#101816]/90 border border-emerald-500/25 px-3 py-1 text-xs font-mono select-none">
+        <span className="text-muted-foreground">The all in one place for</span>
+        <span className="font-extrabold text-emerald-400">
+          {tagWord}
+        </span>
+      </div>
 
       {/* Undo/redo + file actions share one scrollable strip on narrow
           screens -- there isn't horizontal room for every button at once
@@ -212,7 +233,7 @@ export function SimulatorToolbar({
           size="sm"
           variant="default"
           onClick={onToggleAIModal}
-          className="h-9 gap-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-sm shadow-purple-500/25 hover:opacity-90 border-0"
+          className="h-9 gap-1.5 rounded-full bg-white hover:bg-emerald-400 hover:text-black text-[#0c1210] border border-white font-bold uppercase tracking-wider text-xs shadow-sm transition-all"
           title="AI Circuit Architect — Generate circuits with Gemini AI"
         >
           <Sparkles className="size-3.5" />

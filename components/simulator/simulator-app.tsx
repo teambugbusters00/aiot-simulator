@@ -66,8 +66,13 @@ export function SimulatorApp() {
       />
       <div
         ref={rootRef}
-        className="fixed inset-0 z-0 flex h-[100dvh] w-screen flex-col overflow-hidden bg-background"
+        className="fixed inset-0 z-0 flex h-[100dvh] w-screen flex-col overflow-hidden bg-background relative"
       >
+        {/* Ambient blurred glow in background */}
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden flex items-center justify-center">
+          <div className="absolute top-[8%] left-[12%] w-[650px] h-[650px] bg-[radial-gradient(circle,rgba(0,168,143,0.18)_0%,transparent_70%)] blur-[120px] animate-pulse" />
+          <div className="absolute bottom-[10%] right-[10%] w-[750px] h-[750px] bg-[radial-gradient(circle,rgba(3,170,92,0.14)_0%,transparent_70%)] blur-[140px]" />
+        </div>
         <SimulatorToolbar
           isFullscreen={isFullscreen}
           onToggleFullscreen={toggleFullscreen}
