@@ -73,17 +73,37 @@ interface AICircuitModalProps {
   open: boolean
   onClose: () => void
   onOpenCodeEditor?: () => void
+  initialPrompt?: string
+  autoRun?: boolean
 }
 
-export function AICircuitModal({ open, onClose, onOpenCodeEditor }: AICircuitModalProps) {
+export function AICircuitModal({
+  open,
+  onClose,
+  onOpenCodeEditor,
+  initialPrompt = "",
+  autoRun = false,
+}: AICircuitModalProps) {
   const { dispatch } = useSimulator()
-  const [prompt, setPrompt] = useState("")
+  const [prompt, setPrompt] = useState(initialPrompt || "")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<"overview" | "code" | "bom">("overview")
   const [copiedCode, setCopiedCode] = useState(false)
   const [result, setResult] = useState<TranslatedCircuit | null>(null)
   const [deployed, setDeployed] = useState(false)
+  const autoRunRanRef = useState<string | null>(null)
+
+  // Auto-run when prompt is passed from AI IoT Astra Studio
+  useEffect(() => {
+    if (open && initialPrompt) {
+      setPrompt(initialPrompt)
+      if (autoRun && autoRunRanRef[0] !== initialPrompt) {
+        autoRunRanRef[1](initialPrompt)
+        handleGenerate(initialPrompt)
+      }
+    }
+  }, [open, initialPrompt, autoRun])
 
   if (!open) return null
 
@@ -111,6 +131,25 @@ export function AICircuitModal({ open, onClose, onOpenCodeEditor }: AICircuitMod
       const translated = translateBlueprintToSimulator(data as RawCircuitBlueprint)
       setResult(translated)
       setActiveTab("overview")
+
+      // Automatically deploy to canvas when autoRun is requested from AI IoT Astra
+      if (autoRun) {
+        dispatch({
+          type: "LOAD_STATE",
+          state: {
+            components: translated.components,
+            wires: translated.wires,
+          },
+        })
+        if (translated.arduinoCode && typeof window !== "undefined") {
+          try {
+            window.localStorage.setItem("aiot-simulator:sketch-draft", translated.arduinoCode)
+          } catch {
+            // storage ignored
+          }
+        }
+        setDeployed(true)
+      }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Error generating circuit."
       setError(msg)

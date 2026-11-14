@@ -36,7 +36,35 @@ export function SimulatorApp() {
   const [shortcutsOpen, setShortcutsOpen] = useState(false)
   const [isCodeEditorOpen, setCodeEditorOpen] = useState(false)
   const [isAIModalOpen, setAIModalOpen] = useState(false)
+  const [initialPrompt, setInitialPrompt] = useState("")
+  const [autoRunPrompt, setAutoRunPrompt] = useState(false)
   const requestTokenRef = useRef(0)
+
+  // Listen for prompt from URL query params or postMessage (from AI IoT Astra Studio)
+  useEffect(() => {
+    if (typeof window === "undefined") return
+
+    // 1. Check URL parameters e.g. ?prompt=...
+    const params = new URLSearchParams(window.location.search)
+    const promptParam = params.get("prompt")
+    if (promptParam) {
+      setInitialPrompt(promptParam)
+      setAutoRunPrompt(true)
+      setAIModalOpen(true)
+    }
+
+    // 2. Listen for postMessage from parent iframe
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data?.type === "SYNTHESIZE_CIRCUIT" && event.data?.prompt) {
+        setInitialPrompt(event.data.prompt)
+        setAutoRunPrompt(true)
+        setAIModalOpen(true)
+      }
+    }
+
+    window.addEventListener("message", handleMessage)
+    return () => window.removeEventListener("message", handleMessage)
+  }, [])
 
   const requestProject = (project: SimulatorProject) => {
     setLoadError(null)
@@ -68,11 +96,6 @@ export function SimulatorApp() {
         ref={rootRef}
         className="fixed inset-0 z-0 flex h-[100dvh] w-screen flex-col overflow-hidden bg-background relative"
       >
-        {/* Ambient blurred glow in background */}
-        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden flex items-center justify-center">
-          <div className="absolute top-[8%] left-[12%] w-[650px] h-[650px] bg-[radial-gradient(circle,rgba(0,168,143,0.18)_0%,transparent_70%)] blur-[120px] animate-pulse" />
-          <div className="absolute bottom-[10%] right-[10%] w-[750px] h-[750px] bg-[radial-gradient(circle,rgba(3,170,92,0.14)_0%,transparent_70%)] blur-[140px]" />
-        </div>
         <SimulatorToolbar
           isFullscreen={isFullscreen}
           onToggleFullscreen={toggleFullscreen}
@@ -113,6 +136,8 @@ export function SimulatorApp() {
               open={isAIModalOpen}
               onClose={() => setAIModalOpen(false)}
               onOpenCodeEditor={() => setCodeEditorOpen(true)}
+              initialPrompt={initialPrompt}
+              autoRun={autoRunPrompt}
             />
           </main>
         </div>
