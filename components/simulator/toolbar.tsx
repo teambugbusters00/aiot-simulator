@@ -166,9 +166,11 @@ export function SimulatorToolbar({
         className="flex shrink-0 items-center gap-2.5 pr-1 transition-opacity hover:opacity-85 sm:pr-3"
         title="AIoT Astra Simulator"
       >
-        <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-tr from-emerald-400 via-teal-500 to-cyan-500 text-black shadow-sm shadow-emerald-500/30">
-          <CircuitBoard className="size-4" />
-        </div>
+        <img
+          src="/logo.png"
+          alt="AIIOT ASTRA Logo"
+          className="size-8 rounded-full object-cover shadow-sm shadow-emerald-500/30 ring-1 ring-emerald-400/40"
+        />
         <div className="hidden leading-tight sm:block font-mono">
           <p className="text-[13px] font-bold tracking-tight text-foreground flex items-center gap-1.5">
             AIoT Astra

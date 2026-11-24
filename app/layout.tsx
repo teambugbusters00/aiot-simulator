@@ -5,6 +5,11 @@ export const metadata: Metadata = {
   title: "AIoT Astra Simulator | Interactive IoT Circuit Simulation & AI Generation",
   description:
     "AI-powered interactive circuit simulator for Arduino and ESP32 with automated schematic generation, in-browser firmware emulation, and hardware design.",
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/favicon.ico",
+    apple: "/logo.png",
+  },
 }
 
 export const viewport: Viewport = {
